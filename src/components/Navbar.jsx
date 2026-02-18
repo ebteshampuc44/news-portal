@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaGithub, FaDribbble, FaYoutube } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
@@ -51,12 +52,12 @@ const Navbar = () => {
       {/* Bottom Menu */}
       <div className="border-t border-gray-300">
         <div className="max-w-7xl mx-auto flex gap-10 py-3 px-4 text-sm tracking-wide font-medium">
-          <a className="cursor-pointer hover:text-gray-500">HOME</a>
-          <a className="cursor-pointer hover:text-gray-500">TRAVEL</a>
-          <a className="cursor-pointer hover:text-gray-500">LIFE STYLE</a>
-          <a className="cursor-pointer hover:text-gray-500">FASHION</a>
-          <a className="cursor-pointer hover:text-gray-500">SPORT</a>
-          <a className="cursor-pointer hover:text-gray-500">FOOD</a>
+          <Link to="/" className="cursor-pointer hover:text-gray-500">HOME</Link>
+          <Link to="/travel" className="cursor-pointer hover:text-gray-500">TRAVEL</Link>
+          <Link to="/lifestyle" className="cursor-pointer hover:text-gray-500">LIFE STYLE</Link>
+          <Link to="/fashion" className="cursor-pointer hover:text-gray-500">FASHION</Link>
+          <Link to="/sport" className="cursor-pointer hover:text-gray-500">SPORT</Link>
+          <Link to="/food" className="cursor-pointer hover:text-gray-500">FOOD</Link>
         </div>
       </div>
 
