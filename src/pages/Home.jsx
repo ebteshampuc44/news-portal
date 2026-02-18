@@ -75,7 +75,7 @@ const Home = () => {
             />
             <div className="absolute inset-0 bg-black/40"></div>
             <div className="absolute bottom-4 left-4 text-white">
-              <h2 className="font-semibold text-lg">
+              <h2 className="font-semibold   text-lg">
                 How to Get the Most Out of Your Dry Shampoo
               </h2>
               <p className="text-xs mt-1">22 October 2021 • Life Style</p>
@@ -119,15 +119,15 @@ const Home = () => {
               className="w-full h-60 object-cover mb-4"
             />
 
-            <h3 className="text-xl font-bold mb-2">
+            <h3 className="text-xl text-black font-bold mb-2">
               5 Things We Know About Flying This Summer
             </h3>
 
-            <p className="text-sm text-gray-500 mb-3">
+            <p className="text-sm text-black text-gray-500 mb-3">
               22 October 2021 • Travel • by Victoria Anderson
             </p>
 
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <p className="text-gray-600 text-black text-sm leading-relaxed">
               Products allow you to create something once and earn revenue while
               sleeping, sightseeing, or getting a suntan on a beach! They give you
               ownership of your income and a chance for your readers to buy so...
@@ -147,7 +147,7 @@ const Home = () => {
               className="w-full h-60 object-cover mb-4"
             />
 
-            <h3 className="text-xl font-bold mb-2">
+            <h3 className="text-xl text-black font-bold mb-2">
               How to Get the Most Out of Your Dry Shampoo
             </h3>
 
@@ -174,7 +174,7 @@ const Home = () => {
               className="w-full h-60 object-cover mb-4"
             />
 
-            <h3 className="text-xl font-bold mb-2">
+            <h3 className="text-xl text-black font-bold mb-2">
               Sheath Yourself in These Cozy-Chic Sweater Dresses
             </h3>
 
