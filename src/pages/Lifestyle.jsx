@@ -8,15 +8,13 @@ const Lifestyle = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [visiblePosts, setVisiblePosts] = useState(6);
 
-  // ---------- আপনার GNews API Key এখানে বসান ----------
-  const API_KEY = "df43bba9778a35b8cc21a6106da959a9"; // উদাহরণ: "8a7f6e5d4c3b2a1f9e8d7c6b5a4f3e2d1c"
+  // ---------- Your GNews API Key Here ----------
+  const API_KEY = "df43bba9778a35b8cc21a6106da959a9";
 
-  // ---------- লাইফস্টাইল নিউজ ফেচ করার ফাংশন ----------
+  // ---------- Fetch Lifestyle News Function ----------
   const fetchLifestyleNews = async () => {
     setLoading(true);
     try {
-      // GNews API থেকে লাইফস্টাইল সংক্রান্ত নিউজ আনার সঠিক উপায়
-      // লাইফস্টাইল সম্পর্কিত কীওয়ার্ড: lifestyle, wellness, fitness, health, beauty, productivity
       const response = await axios.get(
         `https://gnews.io/api/v4/search?q=lifestyle wellness fitness health beauty productivity&lang=en&country=us&max=20&apikey=${API_KEY}`
       );
@@ -24,63 +22,54 @@ const Lifestyle = () => {
       const data = response.data;
       
       if (data.articles && data.articles.length > 0) {
-        // API ডাটাকে আমাদের ফরম্যাটে কনভার্ট করা
         const formattedNews = data.articles.map((article, index) => {
-          // ক্যাটাগরি ডিটেক্ট করা
           const title = article.title?.toLowerCase() || "";
           const description = article.description?.toLowerCase() || "";
           
-          let category = "জেনারেল";
-          let lifestyleType = "অন্যান্য";
-          let readTime = Math.floor(3 + Math.random() * 8); // ৩-১০ মিনিট রিড টাইম
+          let category = "General";
+          let lifestyleType = "Other";
+          let readTime = Math.floor(3 + Math.random() * 8); // 3-10 minutes read time
           
-          // নির্দিষ্ট লাইফস্টাইল ক্যাটাগরি ডিটেক্ট করা
+          // Detect lifestyle category
           if (title.includes("fitness") || description.includes("fitness") || 
               title.includes("workout") || description.includes("exercise") ||
-              title.includes("gym") || title.includes("ফিটনেস")) {
+              title.includes("gym")) {
             lifestyleType = "Fitness";
-            category = "ফিটনেস";
+            category = "Fitness";
           } else if (title.includes("health") || description.includes("health") || 
-                     title.includes("healthy") || description.includes("স্বাস্থ্য")) {
+                     title.includes("healthy")) {
             lifestyleType = "Health";
-            category = "স্বাস্থ্য";
+            category = "Health";
           } else if (title.includes("beauty") || description.includes("beauty") || 
-                     title.includes("skincare") || description.includes("makeup") ||
-                     title.includes("সৌন্দর্য") || title.includes("ত্বক")) {
+                     title.includes("skincare") || description.includes("makeup")) {
             lifestyleType = "Beauty";
-            category = "বিউটি";
+            category = "Beauty";
           } else if (title.includes("mental") || description.includes("mental") || 
-                     title.includes("wellness") || description.includes("mindfulness") ||
-                     title.includes("মেন্টাল") || title.includes("ধ্যান")) {
+                     title.includes("wellness") || description.includes("mindfulness")) {
             lifestyleType = "Wellness";
-            category = "ওয়েলনেস";
+            category = "Wellness";
           } else if (title.includes("productivity") || description.includes("productivity") || 
-                     title.includes("routine") || description.includes("habit") ||
-                     title.includes("উৎপাদনশীলতা") || title.includes("রুটিন")) {
+                     title.includes("routine") || description.includes("habit")) {
             lifestyleType = "Productivity";
-            category = "প্রোডাক্টিভিটি";
+            category = "Productivity";
           } else if (title.includes("minimalist") || description.includes("minimalist") || 
-                     title.includes("declutter") || description.includes("organizing") ||
-                     title.includes("মিনিমালিস্ট") || title.includes("গোছানো")) {
+                     title.includes("declutter") || description.includes("organizing")) {
             lifestyleType = "Minimalism";
-            category = "মিনিমালিজম";
+            category = "Minimalism";
           } else if (title.includes("relationship") || description.includes("relationship") || 
-                     title.includes("marriage") || description.includes("parenting") ||
-                     title.includes("সম্পর্ক") || title.includes("বিয়ে")) {
+                     title.includes("marriage") || description.includes("parenting")) {
             lifestyleType = "Relationships";
-            category = "সম্পর্ক";
+            category = "Relationships";
           } else if (title.includes("digital detox") || description.includes("digital detox") || 
-                     title.includes("social media") || description.includes("ডিজিটাল")) {
+                     title.includes("social media")) {
             lifestyleType = "Digital Detox";
-            category = "ডিজিটাল ডিটক্স";
+            category = "Digital Detox";
           }
           
-          // বাংলাদেশ সম্পর্কিত নিউজ চিহ্নিত করা
-          const isBangladesh = title.includes("bangladesh") || description.includes("bangladesh") || 
-                               title.includes("বাংলাদেশ") || description.includes("বাংলাদেশ") ||
-                               title.includes("dhaka") || title.includes("ঢাকা");
+          // Detect Bangladesh related news
+          const isBangladesh = title.includes("bangladesh") || description.includes("bangladesh") ||
+                               title.includes("dhaka");
           
-          // র্যান্ডম ইমেজ জেনারেট করা যদি API ইমেজ না দেয়
           const getRandomLifestyleImage = () => {
             const images = [
               "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=2070&auto=format&fit=crop",
@@ -97,25 +86,24 @@ const Lifestyle = () => {
           
           return {
             id: index + 1,
-            title: article.title || "শিরোনাম পাওয়া যায়নি",
+            title: article.title || "Title not available",
             image: article.image || getRandomLifestyleImage(),
-            date: new Date(article.publishedAt).toLocaleDateString('bn-BD', {
+            date: new Date(article.publishedAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
             }),
-            time: new Date(article.publishedAt).toLocaleTimeString('bn-BD', {
+            time: new Date(article.publishedAt).toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit'
             }),
-            author: article.source?.name || "লাইফস্টাইল ডেস্ক",
+            author: article.source?.name || "Lifestyle Desk",
             category: category,
             lifestyleType: lifestyleType,
-            excerpt: article.description?.substring(0, 150) + "..." || "বিস্তারিত পড়ুন...",
+            excerpt: article.description?.substring(0, 150) + "..." || "Read full article...",
             url: article.url,
             isBangladesh: isBangladesh,
             readTime: readTime,
-            // র্যান্ডম লাইক ও কমেন্ট
             likes: Math.floor(50 + Math.random() * 500),
             comments: Math.floor(10 + Math.random() * 100)
           };
@@ -123,11 +111,10 @@ const Lifestyle = () => {
         
         setNews(formattedNews);
       } else {
-        // API থেকে ডাটা না এলে ডেমো লাইফস্টাইল নিউজ দেখাও
         setNews(getDemoLifestyleNews());
       }
     } catch (error) {
-      console.error("লাইফস্টাইল নিউজ ফেচ করতে সমস্যা:", error);
+      console.error("Error fetching lifestyle news:", error);
       setNews(getDemoLifestyleNews());
     } finally {
       setLoading(false);
@@ -135,17 +122,17 @@ const Lifestyle = () => {
     }
   };
 
-  // ---------- ডেমো লাইফস্টাইল নিউজ (API কাজ না করলে দেখাবে) ----------
+  // ---------- Demo Lifestyle News (shown if API fails) ----------
   const getDemoLifestyleNews = () => {
     return [
       {
         id: 1,
         title: "How to Get the Most Out of Your Dry Shampoo",
         image: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=2070&auto=format&fit=crop",
-        date: "১৯ ফেব্রুয়ারি ২০২৬",
-        time: "১০:৩০",
+        date: "February 19, 2026",
+        time: "10:30 AM",
         author: "Sarah Johnson",
-        category: "বিউটি",
+        category: "Beauty",
         lifestyleType: "Beauty",
         excerpt: "If you're using a loose dry shampoo powder, apply to your roots with a fluffy makeup brush to avoid white splotches of powder.",
         readTime: 4,
@@ -156,10 +143,10 @@ const Lifestyle = () => {
         id: 2,
         title: "Why It's Normal for Your Weight to Fluctuate",
         image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop",
-        date: "১৮ ফেব্রুয়ারি ২০২৬",
-        time: "১১:৪৫",
+        date: "February 18, 2026",
+        time: "11:45 AM",
         author: "Dr. Michael Chen",
-        category: "স্বাস্থ্য",
+        category: "Health",
         lifestyleType: "Health",
         excerpt: "Understanding the natural daily and weekly fluctuations in body weight can help you maintain a healthy relationship with fitness.",
         readTime: 6,
@@ -170,10 +157,10 @@ const Lifestyle = () => {
         id: 3,
         title: "10 Morning Routines of Successful People",
         image: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?q=80&w=2072&auto=format&fit=crop",
-        date: "১৭ ফেব্রুয়ারি ২০২৬",
-        time: "০৯:১৫",
+        date: "February 17, 2026",
+        time: "09:15 AM",
         author: "David Kim",
-        category: "প্রোডাক্টিভিটি",
+        category: "Productivity",
         lifestyleType: "Productivity",
         excerpt: "Start your day right with these proven morning routines from industry leaders and productivity experts.",
         readTime: 7,
@@ -184,10 +171,10 @@ const Lifestyle = () => {
         id: 4,
         title: "Minimalist Living: A Beginner's Guide",
         image: "https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?q=80&w=2067&auto=format&fit=crop",
-        date: "১৬ ফেব্রুয়ারি ২০২৬",
-        time: "১৪:২০",
+        date: "February 16, 2026",
+        time: "02:20 PM",
         author: "Emma Watson",
-        category: "মিনিমালিজম",
+        category: "Minimalism",
         lifestyleType: "Minimalism",
         excerpt: "Learn how to declutter your life and focus on what truly matters with these minimalist living principles.",
         readTime: 5,
@@ -198,10 +185,10 @@ const Lifestyle = () => {
         id: 5,
         title: "Mental Health Tips for Busy Professionals",
         image: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=2020&auto=format&fit=crop",
-        date: "১৫ ফেব্রুয়ারি ২০২৬",
-        time: "১৬:৫০",
+        date: "February 15, 2026",
+        time: "04:50 PM",
         author: "Dr. Sarah Johnson",
-        category: "ওয়েলনেস",
+        category: "Wellness",
         lifestyleType: "Wellness",
         excerpt: "Maintaining good mental health is crucial for success. Here are practical tips for busy professionals.",
         readTime: 8,
@@ -212,10 +199,10 @@ const Lifestyle = () => {
         id: 6,
         title: "The Art of Digital Detox",
         image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop",
-        date: "১৪ ফেব্রুয়ারি ২০২৬",
-        time: "১২:৩০",
+        date: "February 14, 2026",
+        time: "12:30 PM",
         author: "Michael Chen",
-        category: "ডিজিটাল ডিটক্স",
+        category: "Digital Detox",
         lifestyleType: "Digital Detox",
         excerpt: "Disconnect to reconnect. Learn how a digital detox can improve your relationships and overall well-being.",
         readTime: 6,
@@ -224,14 +211,14 @@ const Lifestyle = () => {
       },
       {
         id: 7,
-        title: "ঢাকায় যোগা ও মেডিটেশন ওয়ার্কশপ",
+        title: "Yoga & Meditation Workshop in Dhaka",
         image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2022&auto=format&fit=crop",
-        date: "১৩ ফেব্রুয়ারি ২০২৬",
-        time: "১০:০০",
-        author: "লাইফস্টাইল টিম",
-        category: "ওয়েলনেস",
+        date: "February 13, 2026",
+        time: "10:00 AM",
+        author: "Lifestyle Team",
+        category: "Wellness",
         lifestyleType: "Wellness",
-        excerpt: "ঢাকায় আগামী সপ্তাহে অনুষ্ঠিত হতে যাচ্ছে যোগা ও মেডিটেশন ওয়ার্কশপ। অংশগ্রহণ করুন এবং সুস্থ থাকুন।",
+        excerpt: "A yoga and meditation workshop is going to be held in Dhaka next week. Participate and stay healthy.",
         isBangladesh: true,
         readTime: 3,
         likes: 234,
@@ -239,14 +226,14 @@ const Lifestyle = () => {
       },
       {
         id: 8,
-        title: "বাংলাদেশিদের জন্য ফিটনেস টিপস",
+        title: "Fitness Tips for Bangladeshis",
         image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=2070&auto=format&fit=crop",
-        date: "১২ ফেব্রুয়ারি ২০২৬",
-        time: "১৫:৪৫",
-        author: "ফিটনেস এক্সপার্ট",
-        category: "ফিটনেস",
+        date: "February 12, 2026",
+        time: "03:45 PM",
+        author: "Fitness Expert",
+        category: "Fitness",
         lifestyleType: "Fitness",
-        excerpt: "বাংলাদেশের আবহাওয়া ও খাদ্যাভ্যাস অনুযায়ী ফিটনেস টিপস। সহজ উপায়ে সুস্থ থাকুন।",
+        excerpt: "Fitness tips according to Bangladesh's weather and food habits. Stay healthy the easy way.",
         isBangladesh: true,
         readTime: 5,
         likes: 567,
@@ -255,28 +242,27 @@ const Lifestyle = () => {
     ];
   };
 
-  // ---------- অটোমেটিক আপডেট ----------
+  // ---------- Auto Update ----------
   useEffect(() => {
-    fetchLifestyleNews(); // প্রথমবার লোড
+    fetchLifestyleNews();
     
-    // প্রতি ১০ মিনিট পর পর অটো আপডেট (600000 ms)
     const interval = setInterval(() => {
-      console.log("লাইফস্টাইল নিউজ অটোমেটিক আপডেট হচ্ছে...");
+      console.log("Auto-updating lifestyle news...");
       fetchLifestyleNews();
     }, 600000);
     
     return () => clearInterval(interval);
   }, []);
 
-  // ---------- ক্যাটাগরি ফিল্টার ----------
+  // ---------- Category Filter ----------
   const categories = [
-    { id: "all", name: "সব খবর", count: news.length },
-    { id: "fitness", name: "ফিটনেস", count: news.filter(n => n.category === "ফিটনেস").length },
-    { id: "health", name: "স্বাস্থ্য", count: news.filter(n => n.category === "স্বাস্থ্য").length },
-    { id: "beauty", name: "বিউটি", count: news.filter(n => n.category === "বিউটি").length },
-    { id: "wellness", name: "ওয়েলনেস", count: news.filter(n => n.category === "ওয়েলনেস").length },
-    { id: "productivity", name: "প্রোডাক্টিভিটি", count: news.filter(n => n.category === "প্রোডাক্টিভিটি").length },
-    { id: "bangladesh", name: "বাংলাদেশ", count: news.filter(n => n.isBangladesh).length }
+    { id: "all", name: "All News", count: news.length },
+    { id: "fitness", name: "Fitness", count: news.filter(n => n.category === "Fitness").length },
+    { id: "health", name: "Health", count: news.filter(n => n.category === "Health").length },
+    { id: "beauty", name: "Beauty", count: news.filter(n => n.category === "Beauty").length },
+    { id: "wellness", name: "Wellness", count: news.filter(n => n.category === "Wellness").length },
+    { id: "productivity", name: "Productivity", count: news.filter(n => n.category === "Productivity").length },
+    { id: "bangladesh", name: "Bangladesh", count: news.filter(n => n.isBangladesh).length }
   ];
 
   const filteredPosts = activeCategory === "all" 
@@ -284,39 +270,37 @@ const Lifestyle = () => {
     : activeCategory === "bangladesh"
       ? news.filter(n => n.isBangladesh)
       : activeCategory === "fitness"
-        ? news.filter(n => n.category === "ফিটনেস")
+        ? news.filter(n => n.category === "Fitness")
         : activeCategory === "health"
-          ? news.filter(n => n.category === "স্বাস্থ্য")
+          ? news.filter(n => n.category === "Health")
           : activeCategory === "beauty"
-            ? news.filter(n => n.category === "বিউটি")
+            ? news.filter(n => n.category === "Beauty")
             : activeCategory === "wellness"
-              ? news.filter(n => n.category === "ওয়েলনেস")
+              ? news.filter(n => n.category === "Wellness")
               : activeCategory === "productivity"
-                ? news.filter(n => n.category === "প্রোডাক্টিভিটি")
+                ? news.filter(n => n.category === "Productivity")
                 : news;
 
   const handleLoadMore = () => {
     setVisiblePosts(prev => Math.min(prev + 6, filteredPosts.length));
   };
 
-  // Current date/time for display
-  const today = lastUpdated.toLocaleDateString('bn-BD', {
+  const today = lastUpdated.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
 
-  const currentTime = lastUpdated.toLocaleTimeString('bn-BD', {
+  const currentTime = lastUpdated.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit'
   });
 
-  // Featured Categories Stats
   const featuredCategories = [
-    { name: "Healthy Eating", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop", count: news.filter(n => n.category === "স্বাস্থ্য" || n.category === "ওয়েলনেস").length },
-    { name: "Fitness", image: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop", count: news.filter(n => n.category === "ফিটনেস").length },
-    { name: "Wellness", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2022&auto=format&fit=crop", count: news.filter(n => n.category === "ওয়েলনেস").length }
+    { name: "Healthy Eating", image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop", count: news.filter(n => n.category === "Health" || n.category === "Wellness").length },
+    { name: "Fitness", image: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?q=80&w=2070&auto=format&fit=crop", count: news.filter(n => n.category === "Fitness").length },
+    { name: "Wellness", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?q=80&w=2022&auto=format&fit=crop", count: news.filter(n => n.category === "Wellness").length }
   ];
 
   return (
@@ -326,27 +310,22 @@ const Lifestyle = () => {
         <div className="mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-black">লাইফস্টাইল</h1>
-              <p className="text-gray-600 mt-1">স্বাস্থ্য, ফিটনেস, বিউটি ও সুস্থ জীবনযাপনের টিপস</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-black">Lifestyle</h1>
+              <p className="text-gray-600 mt-1">Health, fitness, beauty, and wellness tips</p>
             </div>
             <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
               <div className="text-lg font-semibold text-gray-800">{today}</div>
-              <div className="text-sm text-gray-500">সর্বশেষ আপডেট: {currentTime}</div>
+              <div className="text-sm text-gray-500">Last updated: {currentTime}</div>
             </div>
           </div>
           <div className="h-1 w-32 bg-green-600"></div>
         </div>
 
-        {/* Auto Update Status */}
-        {/* <div className="bg-green-50 border border-green-200 rounded-lg p-2 mb-4 text-center text-sm text-green-700">
-          ⏰ অটো-আপডেট: প্রতি ১০ মিনিট পর নতুন লাইফস্টাইল খবর আসবে
-        </div> */}
-
         {/* Loading State */}
         {loading && (
           <div className="text-center py-10">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-green-600 border-t-transparent"></div>
-            <p className="mt-2 text-gray-600">লাইফস্টাইল খবর আনা হচ্ছে...</p>
+            <p className="mt-2 text-gray-600">Loading lifestyle news...</p>
           </div>
         )}
 
@@ -363,7 +342,7 @@ const Lifestyle = () => {
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
                   <div className="text-center">
                     <span className="text-white text-xl font-bold block">{cat.name}</span>
-                    <span className="text-green-300 text-sm">{cat.count} টি আর্টিকেল</span>
+                    <span className="text-green-300 text-sm">{cat.count} articles</span>
                   </div>
                 </div>
               </div>
@@ -407,21 +386,21 @@ const Lifestyle = () => {
               <div className="text-xl font-bold text-green-600">
                 {Math.floor(news.reduce((acc, item) => acc + item.likes, 0) / news.length)}
               </div>
-              <div className="text-xs text-gray-500">গড় লাইক</div>
+              <div className="text-xs text-gray-500">Avg. Likes</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-green-600">
                 {Math.floor(news.reduce((acc, item) => acc + item.readTime, 0) / news.length)} min
               </div>
-              <div className="text-xs text-gray-500">গড় পড়ার সময়</div>
+              <div className="text-xs text-gray-500">Avg. Read Time</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-green-600">{news.filter(n => n.isBangladesh).length}</div>
-              <div className="text-xs text-gray-500">বাংলাদেশ</div>
+              <div className="text-xs text-gray-500">Bangladesh</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-green-600">{news.length}</div>
-              <div className="text-xs text-gray-500">মোট খবর</div>
+              <div className="text-xs text-gray-500">Total</div>
             </div>
           </div>
         )}
@@ -431,7 +410,7 @@ const Lifestyle = () => {
           <>
             {filteredPosts.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-2xl shadow">
-                <p className="text-gray-500 text-lg">কোন লাইফস্টাইল খবর পাওয়া যায়নি</p>
+                <p className="text-gray-500 text-lg">No lifestyle news found</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -448,7 +427,7 @@ const Lifestyle = () => {
                       />
                       {post.isBangladesh && (
                         <span className="absolute top-3 left-3 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                          🇧🇩 বাংলাদেশ
+                          🇧🇩 Bangladesh
                         </span>
                       )}
                       <span className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
@@ -487,7 +466,7 @@ const Lifestyle = () => {
                           rel="noopener noreferrer"
                           className="text-green-600 hover:text-green-700 text-sm font-semibold flex items-center gap-1"
                         >
-                          বিস্তারিত
+                          Read More
                           <span className="text-lg">→</span>
                         </a>
                       </div>
@@ -504,7 +483,7 @@ const Lifestyle = () => {
                   onClick={handleLoadMore}
                   className="bg-green-600 text-white hover:bg-green-700 px-8 py-3 rounded-full font-bold transition shadow-md"
                 >
-                  আরও খবর দেখুন ({filteredPosts.length - visiblePosts})
+                  Load More ({filteredPosts.length - visiblePosts})
                 </button>
               </div>
             )}
@@ -516,14 +495,14 @@ const Lifestyle = () => {
           <div className="mt-8 bg-gradient-to-r from-green-500 to-green-700 rounded-2xl p-6 text-white">
             <div className="flex items-center gap-3 mb-3">
               <span className="text-3xl">🌿</span>
-              <h3 className="text-xl font-bold">আজকের ওয়েলনেস টিপস</h3>
+              <h3 className="text-xl font-bold">Wellness Tip of the Day</h3>
             </div>
             <p className="text-sm opacity-90 mb-3">
-              প্রতিদিন ১০ মিনিট মেডিটেশন করুন। এটি আপনার মানসিক চাপ কমাবে এবং ফোকাস বাড়াবে।
-              পর্যাপ্ত পানি পান করুন এবং ৭-৮ ঘন্টা ঘুমান।
+              Meditate for 10 minutes every day. It will reduce your stress and increase focus.
+              Drink plenty of water and sleep 7-8 hours daily.
             </p>
             <div className="flex justify-end">
-              <span className="text-xs opacity-75">- লাইফস্টাইল এক্সপার্ট টিম</span>
+              <span className="text-xs opacity-75">- Lifestyle Expert Team</span>
             </div>
           </div>
         )}

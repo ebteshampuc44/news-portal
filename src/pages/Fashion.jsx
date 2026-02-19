@@ -8,15 +8,13 @@ const Fashion = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [visiblePosts, setVisiblePosts] = useState(6);
 
-  // ---------- আপনার GNews API Key এখানে বসান ----------
-  const API_KEY = "df43bba9778a35b8cc21a6106da959a9"; // উদাহরণ: "8a7f6e5d4c3b2a1f9e8d7c6b5a4f3e2d1c"
+  // ---------- Your GNews API Key Here ----------
+  const API_KEY = "df43bba9778a35b8cc21a6106da959a9";
 
-  // ---------- ফ্যাশন নিউজ ফেচ করার ফাংশন ----------
+  // ---------- Fetch Fashion News Function ----------
   const fetchFashionNews = async () => {
     setLoading(true);
     try {
-      // GNews API থেকে ফ্যাশন সংক্রান্ত নিউজ আনার সঠিক উপায়
-      // ফ্যাশন সম্পর্কিত কীওয়ার্ড: fashion, style, clothing, designer, brand, trend
       const response = await axios.get(
         `https://gnews.io/api/v4/search?q=fashion style clothing designer brand trend&lang=en&country=us&max=20&apikey=${API_KEY}`
       );
@@ -24,61 +22,47 @@ const Fashion = () => {
       const data = response.data;
       
       if (data.articles && data.articles.length > 0) {
-        // API ডাটাকে আমাদের ফরম্যাটে কনভার্ট করা
         const formattedNews = data.articles.map((article, index) => {
-          // ক্যাটাগরি ডিটেক্ট করা
           const title = article.title?.toLowerCase() || "";
           const description = article.description?.toLowerCase() || "";
           
-          let category = "আন্তর্জাতিক ফ্যাশন";
-          let fashionType = "অন্যান্য";
-          let season = "সারা বছর";
+          let fashionType = "Other";
+          let season = "All Year";
           
-          // ফ্যাশনের ধরন ডিটেক্ট করা
-          if (title.includes("winter") || description.includes("winter") || 
-              title.includes("শীত") || description.includes("শীত")) {
+          // Detect season
+          if (title.includes("winter") || description.includes("winter")) {
             season = "Winter";
-          } else if (title.includes("summer") || description.includes("summer") || 
-                     title.includes("গ্রীষ্ম") || description.includes("গ্রীষ্ম")) {
+          } else if (title.includes("summer") || description.includes("summer")) {
             season = "Summer";
-          } else if (title.includes("spring") || description.includes("spring") || 
-                     title.includes("বসন্ত") || description.includes("বসন্ত")) {
+          } else if (title.includes("spring") || description.includes("spring")) {
             season = "Spring";
           } else if (title.includes("fall") || description.includes("fall") || 
-                     title.includes("autumn") || description.includes("শরৎ")) {
+                     title.includes("autumn")) {
             season = "Fall/Autumn";
           }
           
-          // নির্দিষ্ট ফ্যাশন ক্যাটাগরি
+          // Detect fashion type
           if (title.includes("accessor") || description.includes("accessor") || 
-              title.includes("জুয়েলারি") || title.includes("bag")) {
+              title.includes("jewelry") || title.includes("bag")) {
             fashionType = "Accessories";
-          } else if (title.includes("dress") || description.includes("dress") || 
-                     title.includes("পোশাক") || title.includes("গাউন")) {
+          } else if (title.includes("dress") || description.includes("dress")) {
             fashionType = "Dresses";
           } else if (title.includes("shoe") || description.includes("shoe") || 
-                     title.includes("footwear") || title.includes("জুতা")) {
+                     title.includes("footwear")) {
             fashionType = "Footwear";
-          } else if (title.includes("street") || description.includes("street style") || 
-                     title.includes("স্ট্রিট")) {
+          } else if (title.includes("street") || description.includes("street style")) {
             fashionType = "Street Style";
-          } else if (title.includes("sustainable") || description.includes("eco") || 
-                     title.includes("টেকসই")) {
+          } else if (title.includes("sustainable") || description.includes("eco")) {
             fashionType = "Sustainable";
-          } else if (title.includes("week") || description.includes("fashion week") || 
-                     title.includes("ফ্যাশন উইক")) {
+          } else if (title.includes("week") || description.includes("fashion week")) {
             fashionType = "Fashion Week";
           }
           
-          // ডিজাইনার চেক
           const isDesigner = title.includes("designer") || description.includes("designer") ||
                             title.includes("brand") || description.includes("brand");
           
-          // ট্রেন্ড চেক
-          const isTrend = title.includes("trend") || description.includes("trend") ||
-                         title.includes("what's in") || description.includes("what's out");
+          const isTrend = title.includes("trend") || description.includes("trend");
           
-          // র্যান্ডম ইমেজ জেনারেট করা যদি API ইমেজ না দেয়
           const getRandomFashionImage = () => {
             const images = [
               "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=1887&auto=format&fit=crop",
@@ -95,26 +79,24 @@ const Fashion = () => {
           
           return {
             id: index + 1,
-            title: article.title || "শিরোনাম পাওয়া যায়নি",
+            title: article.title || "Title not available",
             image: article.image || getRandomFashionImage(),
-            date: new Date(article.publishedAt).toLocaleDateString('bn-BD', {
+            date: new Date(article.publishedAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
             }),
-            time: new Date(article.publishedAt).toLocaleTimeString('bn-BD', {
+            time: new Date(article.publishedAt).toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit'
             }),
-            author: article.source?.name || "ফ্যাশন ডেস্ক",
-            category: category,
+            author: article.source?.name || "Fashion Desk",
             fashionType: fashionType,
             season: season,
-            excerpt: article.description?.substring(0, 150) + "..." || "বিস্তারিত খবর পড়ুন...",
+            excerpt: article.description?.substring(0, 150) + "..." || "Read full article...",
             url: article.url,
             isDesigner: isDesigner,
             isTrend: isTrend,
-            // রেটিং জেনারেট করা (র্যান্ডম)
             rating: (3.5 + Math.random() * 1.5).toFixed(1),
             likes: Math.floor(100 + Math.random() * 900)
           };
@@ -122,11 +104,10 @@ const Fashion = () => {
         
         setNews(formattedNews);
       } else {
-        // API থেকে ডাটা না এলে ডেমো ফ্যাশন নিউজ দেখাও
         setNews(getDemoFashionNews());
       }
     } catch (error) {
-      console.error("ফ্যাশন নিউজ ফেচ করতে সমস্যা:", error);
+      console.error("Error fetching fashion news:", error);
       setNews(getDemoFashionNews());
     } finally {
       setLoading(false);
@@ -134,15 +115,15 @@ const Fashion = () => {
     }
   };
 
-  // ---------- ডেমো ফ্যাশন নিউজ (API কাজ না করলে দেখাবে) ----------
+  // ---------- Demo Fashion News (shown if API fails) ----------
   const getDemoFashionNews = () => {
     return [
       {
         id: 1,
         title: "Sheath Yourself in These Cozy-Chic Sweater Dresses",
         image: "https://images.unsplash.com/photo-1539008835657-9e8e9680c956?q=80&w=1887&auto=format&fit=crop",
-        date: "১৯ ফেব্রুয়ারি ২০২৬",
-        time: "১০:৩০",
+        date: "February 19, 2026",
+        time: "10:30 AM",
         author: "Emma Roberts",
         fashionType: "Dresses",
         season: "Winter",
@@ -154,8 +135,8 @@ const Fashion = () => {
         id: 2,
         title: "Winter Fashion Trends 2024: What's In and What's Out",
         image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop",
-        date: "১৮ ফেব্রুয়ারি ২০২৬",
-        time: "১১:৪৫",
+        date: "February 18, 2026",
+        time: "11:45 AM",
         author: "Sophie Turner",
         fashionType: "Trends",
         season: "Winter",
@@ -168,11 +149,11 @@ const Fashion = () => {
         id: 3,
         title: "Sustainable Fashion: Brands to Watch",
         image: "https://images.unsplash.com/photo-1551232864-3f0890e580d9?q=80&w=1887&auto=format&fit=crop",
-        date: "১৭ ফেব্রুয়ারি ২০২৬",
-        time: "১৪:২০",
+        date: "February 17, 2026",
+        time: "02:20 PM",
         author: "Victoria Anderson",
         fashionType: "Sustainable",
-        season: "সারা বছর",
+        season: "All Year",
         excerpt: "Eco-friendly doesn't mean compromising on style. Discover these sustainable fashion brands making a difference.",
         rating: "4.9",
         likes: 1560
@@ -181,11 +162,11 @@ const Fashion = () => {
         id: 4,
         title: "Accessorizing 101: The Complete Guide",
         image: "https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?q=80&w=1965&auto=format&fit=crop",
-        date: "১৬ ফেব্রুয়ারি ২০২৬",
-        time: "০৯:১৫",
+        date: "February 16, 2026",
+        time: "09:15 AM",
         author: "Michael Chen",
         fashionType: "Accessories",
-        season: "সারা বছর",
+        season: "All Year",
         excerpt: "Learn how to elevate any outfit with the right accessories. From statement jewelry to the perfect bag.",
         rating: "4.6",
         likes: 830
@@ -194,8 +175,8 @@ const Fashion = () => {
         id: 5,
         title: "Street Style Looks from Paris Fashion Week",
         image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=1887&auto=format&fit=crop",
-        date: "১৫ ফেব্রুয়ারি ২০২৬",
-        time: "১৬:৫০",
+        date: "February 15, 2026",
+        time: "04:50 PM",
         author: "David Kim",
         fashionType: "Street Style",
         season: "Spring",
@@ -207,68 +188,38 @@ const Fashion = () => {
         id: 6,
         title: "How to Build a Capsule Wardrobe",
         image: "https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=2070&auto=format&fit=crop",
-        date: "১৪ ফেব্রুয়ারি ২০২৬",
-        time: "১২:৩০",
+        date: "February 14, 2026",
+        time: "12:30 PM",
         author: "Sarah Johnson",
         fashionType: "Wardrobe",
-        season: "সারা বছর",
+        season: "All Year",
         excerpt: "Simplify your morning routine with these essential pieces that mix and match perfectly.",
         rating: "4.9",
         likes: 3450
-      },
-      {
-        id: 7,
-        title: "ঢাকায় ফ্যাশন শো: দেশি ডিজাইনারদের জমকালো আয়োজন",
-        image: "https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=1888&auto=format&fit=crop",
-        date: "১৩ ফেব্রুয়ারি ২০২৬",
-        time: "১০:০০",
-        author: "বাংলা ফ্যাশন ডেস্ক",
-        fashionType: "Fashion Week",
-        season: "Spring",
-        excerpt: "ঢাকায় অনুষ্ঠিত হলো বাংলা ফ্যাশন উইক ২০২৬। দেশি ডিজাইনারদের নতুন কালেকশন প্রদর্শিত হয়।",
-        isDesigner: true,
-        rating: "4.7",
-        likes: 890
-      },
-      {
-        id: 8,
-        title: "ঈদ কালেকশন ২০২৬: ডিজাইনারদের নতুন আয়োজন",
-        image: "https://images.unsplash.com/photo-1554415707-6e8cfc93fe23?q=80&w=2070&auto=format&fit=crop",
-        date: "১২ ফেব্রুয়ারি ২০২৬",
-        time: "১৫:৪৫",
-        author: "ফ্যাশন রিপোর্টার",
-        fashionType: "Designer",
-        season: "Summer",
-        excerpt: "ঈদুল ফিতর উপলক্ষে দেশের শীর্ষ ফ্যাশন ডিজাইনারদের নতুন কালেকশন বাজারে আসছে।",
-        isDesigner: true,
-        rating: "4.8",
-        likes: 1200
       }
     ];
   };
 
-  // ---------- অটোমেটিক আপডেট ----------
+  // ---------- Auto Update ----------
   useEffect(() => {
-    fetchFashionNews(); // প্রথমবার লোড
+    fetchFashionNews();
     
-    // প্রতি ১০ মিনিট পর পর অটো আপডেট (600000 ms)
     const interval = setInterval(() => {
-      console.log("ফ্যাশন নিউজ অটোমেটিক আপডেট হচ্ছে...");
+      console.log("Auto-updating fashion news...");
       fetchFashionNews();
     }, 600000);
     
     return () => clearInterval(interval);
   }, []);
 
-  // ---------- ক্যাটাগরি ফিল্টার ----------
+  // ---------- Category Filter ----------
   const categories = [
-    { id: "all", name: "সব খবর", count: news.length },
-    { id: "trends", name: "ট্রেন্ডস", count: news.filter(n => n.isTrend).length },
-    { id: "designer", name: "ডিজাইনার", count: news.filter(n => n.isDesigner).length },
-    { id: "dresses", name: "পোশাক", count: news.filter(n => n.fashionType === "Dresses").length },
-    { id: "accessories", name: "এক্সেসরিজ", count: news.filter(n => n.fashionType === "Accessories").length },
-    { id: "street", name: "স্ট্রিট স্টাইল", count: news.filter(n => n.fashionType === "Street Style").length },
-    { id: "sustainable", name: "সাসটেইনেবল", count: news.filter(n => n.fashionType === "Sustainable").length }
+    { id: "all", name: "All News", count: news.length },
+    { id: "trends", name: "Trends", count: news.filter(n => n.isTrend).length },
+    { id: "designer", name: "Designers", count: news.filter(n => n.isDesigner).length },
+    { id: "dresses", name: "Dresses", count: news.filter(n => n.fashionType === "Dresses").length },
+    { id: "accessories", name: "Accessories", count: news.filter(n => n.fashionType === "Accessories").length },
+    { id: "street", name: "Street Style", count: news.filter(n => n.fashionType === "Street Style").length }
   ];
 
   const filteredPosts = activeCategory === "all" 
@@ -283,28 +234,24 @@ const Fashion = () => {
             ? news.filter(n => n.fashionType === "Accessories")
             : activeCategory === "street"
               ? news.filter(n => n.fashionType === "Street Style")
-              : activeCategory === "sustainable"
-                ? news.filter(n => n.fashionType === "Sustainable")
-                : news;
+              : news;
 
   const handleLoadMore = () => {
     setVisiblePosts(prev => Math.min(prev + 6, filteredPosts.length));
   };
 
-  // Current date/time for display
-  const today = lastUpdated.toLocaleDateString('bn-BD', {
+  const today = lastUpdated.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
 
-  const currentTime = lastUpdated.toLocaleTimeString('bn-BD', {
+  const currentTime = lastUpdated.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit'
   });
 
-  // Editor's Pick (সবচেয়ে বেশি লাইক পাওয়া পোস্ট)
   const editorsPick = news.length > 0 ? 
     news.sort((a, b) => b.likes - a.likes)[0] : null;
 
@@ -315,27 +262,22 @@ const Fashion = () => {
         <div className="mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-black">ফ্যাশন ওয়ার্ল্ড</h1>
-              <p className="text-gray-600 mt-1">ট্রেন্ডস, ডিজাইনার ও ফ্যাশনের সর্বশেষ খবর</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-black">Fashion World</h1>
+              <p className="text-gray-600 mt-1">Latest trends, designers, and fashion news</p>
             </div>
             <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
               <div className="text-lg font-semibold text-gray-800">{today}</div>
-              <div className="text-sm text-gray-500">সর্বশেষ আপডেট: {currentTime}</div>
+              <div className="text-sm text-gray-500">Last updated: {currentTime}</div>
             </div>
           </div>
           <div className="h-1 w-32 bg-purple-600"></div>
         </div>
 
-        {/* Auto Update Status */}
-        {/* <div className="bg-green-50 border border-green-200 rounded-lg p-2 mb-4 text-center text-sm text-green-700">
-          ⏰ অটো-আপডেট: প্রতি ১০ মিনিট পর নতুন ফ্যাশন খবর আসবে
-        </div> */}
-
         {/* Loading State */}
         {loading && (
           <div className="text-center py-10">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-purple-600 border-t-transparent"></div>
-            <p className="mt-2 text-gray-600">ফ্যাশন খবর আনা হচ্ছে...</p>
+            <p className="mt-2 text-gray-600">Loading fashion news...</p>
           </div>
         )}
 
@@ -428,21 +370,21 @@ const Fashion = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-purple-600">{news.filter(n => n.isTrend).length}</div>
-              <div className="text-xs text-gray-500">ট্রেন্ডিং</div>
+              <div className="text-xs text-gray-500">Trending</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-purple-600">{news.filter(n => n.isDesigner).length}</div>
-              <div className="text-xs text-gray-500">ডিজাইনার</div>
+              <div className="text-xs text-gray-500">Designers</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-purple-600">
                 {news.filter(n => n.season === "Winter" || n.season === "Summer").length}
               </div>
-              <div className="text-xs text-gray-500">সিজনাল</div>
+              <div className="text-xs text-gray-500">Seasonal</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-purple-600">{news.length}</div>
-              <div className="text-xs text-gray-500">মোট খবর</div>
+              <div className="text-xs text-gray-500">Total</div>
             </div>
           </div>
         )}
@@ -452,7 +394,7 @@ const Fashion = () => {
           <>
             {filteredPosts.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-2xl shadow">
-                <p className="text-gray-500 text-lg">কোন ফ্যাশন খবর পাওয়া যায়নি</p>
+                <p className="text-gray-500 text-lg">No fashion news found</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -469,12 +411,12 @@ const Fashion = () => {
                       />
                       {post.isTrend && (
                         <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                          🔥 ট্রেন্ডিং
+                          🔥 Trending
                         </span>
                       )}
                       {post.isDesigner && (
                         <span className="absolute top-3 left-3 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                          👨‍🎨 ডিজাইনার
+                          👨‍🎨 Designer
                         </span>
                       )}
                       <span className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
@@ -499,7 +441,7 @@ const Fashion = () => {
                       
                       {/* Fashion Details */}
                       <div className="flex flex-wrap gap-2 mb-3 text-xs">
-                        {post.season && post.season !== "সারা বছর" && (
+                        {post.season && post.season !== "All Year" && (
                           <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full">
                             {post.season}
                           </span>
@@ -520,7 +462,7 @@ const Fashion = () => {
                           rel="noopener noreferrer"
                           className="text-purple-600 hover:text-purple-700 text-sm font-semibold flex items-center gap-1"
                         >
-                          বিস্তারিত
+                          Read More
                           <span className="text-lg">→</span>
                         </a>
                       </div>
@@ -537,7 +479,7 @@ const Fashion = () => {
                   onClick={handleLoadMore}
                   className="bg-purple-600 text-white hover:bg-purple-700 px-8 py-3 rounded-full font-bold transition shadow-md"
                 >
-                  আরও খবর দেখুন ({filteredPosts.length - visiblePosts})
+                  Load More ({filteredPosts.length - visiblePosts})
                 </button>
               </div>
             )}

@@ -8,15 +8,13 @@ const Food = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [visiblePosts, setVisiblePosts] = useState(6);
 
-  // ---------- আপনার GNews API Key এখানে বসান ----------
-  const API_KEY = "df43bba9778a35b8cc21a6106da959a9"; // উদাহরণ: "8a7f6e5d4c3b2a1f9e8d7c6b5a4f3e2d1c"
+  // ---------- Your GNews API Key Here ----------
+  const API_KEY = "df43bba9778a35b8cc21a6106da959a9";
 
-  // ---------- ফুড নিউজ ফেচ করার ফাংশন ----------
+  // ---------- Fetch Food News Function ----------
   const fetchFoodNews = async () => {
     setLoading(true);
     try {
-      // GNews API থেকে ফুড সংক্রান্ত নিউজ আনা
-      // food, cooking, restaurant, recipe ইত্যাদি কীওয়ার্ড ব্যবহার করা হয়েছে
       const response = await axios.get(
         `https://gnews.io/api/v4/search?q=food OR cooking OR restaurant OR recipe OR cuisine&lang=en&country=us&max=20&apikey=${API_KEY}`
       );
@@ -24,53 +22,39 @@ const Food = () => {
       const data = response.data;
       
       if (data.articles && data.articles.length > 0) {
-        // API ডাটাকে আমাদের ফরম্যাটে কনভার্ট করা
         const formattedNews = data.articles.map((article, index) => {
-          // ক্যাটাগরি ডিটেক্ট করা
           const title = article.title?.toLowerCase() || "";
           const description = article.description?.toLowerCase() || "";
           
-          let category = "আন্তর্জাতিক";
-          let mealType = "অন্যান্য";
+          let category = "International";
+          let mealType = "Other";
           
-          // খাবারের ধরন ডিটেক্ট করা
-          if (title.includes("breakfast") || description.includes("breakfast") || 
-              title.includes("সকাল") || title.includes("নাস্তা")) {
+          // Detect meal type
+          if (title.includes("breakfast") || description.includes("breakfast")) {
             mealType = "Breakfast";
-          } else if (title.includes("lunch") || description.includes("lunch") || 
-                     title.includes("দুপুর") || title.includes("মধ্যাহ্ন")) {
+          } else if (title.includes("lunch") || description.includes("lunch")) {
             mealType = "Lunch";
-          } else if (title.includes("dinner") || description.includes("dinner") || 
-                     title.includes("রাত") || title.includes("ডিনার")) {
+          } else if (title.includes("dinner") || description.includes("dinner")) {
             mealType = "Dinner";
-          } else if (title.includes("dessert") || description.includes("dessert") || 
-                     title.includes("মিষ্টি") || title.includes("পিঠা")) {
+          } else if (title.includes("dessert") || description.includes("dessert")) {
             mealType = "Dessert";
           }
           
-          // বাংলাদেশ বা ভারতীয় খাবার ডিটেক্ট করা
-          if (title.includes("bangladesh") || description.includes("bangladesh") || 
-              title.includes("বাংলাদেশ") || description.includes("বাংলাদেশ") ||
-              title.includes("indian") || title.includes("ভারতীয়") ||
-              title.includes("bengali") || title.includes("বাংলা")) {
-            category = "বাংলাদেশ/ভারত";
+          // Detect Bangladeshi/Indian food
+          if (title.includes("bangladesh") || description.includes("bangladesh") ||
+              title.includes("indian") || title.includes("bengali")) {
+            category = "Bangladesh/India";
           }
           
-          // রেসিপি চেক করা
-          const isRecipe = title.includes("recipe") || description.includes("recipe") || 
-                          title.includes("রেসিপি") || description.includes("রেসিপি") ||
-                          title.includes("how to make") || title.includes("বানানোর উপায়");
+          const isRecipe = title.includes("recipe") || description.includes("recipe") ||
+                          title.includes("how to make");
           
-          // রেস্টুরেন্ট চেক করা
           const isRestaurant = title.includes("restaurant") || description.includes("restaurant") ||
-                              title.includes("রেস্টুরেন্ট") || description.includes("রেস্টুরেন্ট") ||
-                              title.includes("cafe") || title.includes("ক্যাফে");
+                              title.includes("cafe") || title.includes("bistro");
           
-          // রেটিং জেনারেট করা (র্যান্ডম)
           const rating = (3.5 + Math.random() * 1.5).toFixed(1);
           const reviewCount = Math.floor(100 + Math.random() * 900);
           
-          // র্যান্ডম ইমেজ জেনারেট করা যদি API ইমেজ না দেয়
           const getRandomFoodImage = () => {
             const images = [
               "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop",
@@ -87,21 +71,21 @@ const Food = () => {
           
           return {
             id: index + 1,
-            title: article.title || "শিরোনাম পাওয়া যায়নি",
+            title: article.title || "Title not available",
             image: article.image || getRandomFoodImage(),
-            date: new Date(article.publishedAt).toLocaleDateString('bn-BD', {
+            date: new Date(article.publishedAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
             }),
-            time: new Date(article.publishedAt).toLocaleTimeString('bn-BD', {
+            time: new Date(article.publishedAt).toLocaleTimeString('en-US', {
               hour: '2-digit',
               minute: '2-digit'
             }),
-            author: article.source?.name || "ফুড ডেস্ক",
+            author: article.source?.name || "Food Desk",
             category: category,
             mealType: mealType,
-            excerpt: article.description?.substring(0, 150) + "..." || "বিস্তারিত খবর পড়ুন...",
+            excerpt: article.description?.substring(0, 150) + "..." || "Read full article...",
             url: article.url,
             isRecipe: isRecipe,
             isRestaurant: isRestaurant,
@@ -114,11 +98,10 @@ const Food = () => {
         
         setNews(formattedNews);
       } else {
-        // API থেকে ডাটা না এলে ডেমো ফুড নিউজ দেখাও
         setNews(getDemoFoodNews());
       }
     } catch (error) {
-      console.error("ফুড নিউজ ফেচ করতে সমস্যা:", error);
+      console.error("Error fetching food news:", error);
       setNews(getDemoFoodNews());
     } finally {
       setLoading(false);
@@ -126,17 +109,17 @@ const Food = () => {
     }
   };
 
-  // ---------- ডেমো ফুড নিউজ (API কাজ না করলে দেখাবে) ----------
+  // ---------- Demo Food News (shown if API fails) ----------
   const getDemoFoodNews = () => {
     return [
       {
         id: 1,
         title: "World's Top 10 Restaurants 2024",
         image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2070&auto=format&fit=crop",
-        date: "১৯ ফেব্রুয়ারি ২০২৬",
-        time: "১০:৩০",
+        date: "February 19, 2026",
+        time: "10:30 AM",
         author: "Gordon Ramsay",
-        category: "আন্তর্জাতিক",
+        category: "International",
         mealType: "Dinner",
         excerpt: "From molecular gastronomy to traditional cuisine, discover the world's best dining destinations for 2024.",
         isRestaurant: true,
@@ -147,10 +130,10 @@ const Food = () => {
         id: 2,
         title: "Easy Pasta Recipes for Beginners",
         image: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=2132&auto=format&fit=crop",
-        date: "১৮ ফেব্রুয়ারি ২০২৬",
-        time: "১১:৪৫",
+        date: "February 18, 2026",
+        time: "11:45 AM",
         author: "Jamie Oliver",
-        category: "আন্তর্জাতিক",
+        category: "International",
         mealType: "Lunch",
         excerpt: "Master the art of Italian cooking with these simple yet delicious pasta recipes that anyone can make.",
         isRecipe: true,
@@ -163,10 +146,10 @@ const Food = () => {
         id: 3,
         title: "The Art of Sushi Making",
         image: "https://images.unsplash.com/photo-1553621042-f6e147245754?q=80&w=2025&auto=format&fit=crop",
-        date: "১৭ ফেব্রুয়ারি ২০২৬",
-        time: "১৪:২০",
+        date: "February 17, 2026",
+        time: "02:20 PM",
         author: "Masaharu Morimoto",
-        category: "আন্তর্জাতিক",
+        category: "International",
         mealType: "Dinner",
         excerpt: "Learn the techniques and traditions behind perfect sushi from a master chef. Step-by-step guide for beginners.",
         isRecipe: true,
@@ -179,10 +162,10 @@ const Food = () => {
         id: 4,
         title: "Healthy Breakfast Ideas Under 10 Minutes",
         image: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?q=80&w=2070&auto=format&fit=crop",
-        date: "১৬ ফেব্রুয়ারি ২০২৬",
-        time: "০৯:১৫",
+        date: "February 16, 2026",
+        time: "09:15 AM",
         author: "Victoria Anderson",
-        category: "আন্তর্জাতিক",
+        category: "International",
         mealType: "Breakfast",
         excerpt: "Start your day right with these quick, nutritious breakfast options for busy mornings. All recipes under 10 minutes.",
         isRecipe: true,
@@ -195,10 +178,10 @@ const Food = () => {
         id: 5,
         title: "Wine Pairing Guide for Beginners",
         image: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?q=80&w=2070&auto=format&fit=crop",
-        date: "১৫ ফেব্রুয়ারি ২০২৬",
-        time: "১৬:৫০",
+        date: "February 15, 2026",
+        time: "04:50 PM",
         author: "Robert Parker",
-        category: "আন্তর্জাতিক",
+        category: "International",
         mealType: "Dinner",
         excerpt: "Confused about which wine goes with what? This beginner's guide has you covered with simple rules and recommendations.",
         rating: "4.5",
@@ -208,71 +191,40 @@ const Food = () => {
         id: 6,
         title: "Street Food Tour: Bangkok's Best",
         image: "https://images.unsplash.com/photo-1559314809-0d155014e29e?q=80&w=2070&auto=format&fit=crop",
-        date: "১৪ ফেব্রুয়ারি ২০২৬",
-        time: "১২:৩০",
+        date: "February 14, 2026",
+        time: "12:30 PM",
         author: "Anthony Bourdain",
-        category: "আন্তর্জাতিক",
+        category: "International",
         mealType: "Lunch",
         excerpt: "Explore the vibrant street food scene of Bangkok through our comprehensive guide to the best stalls and markets.",
         isRestaurant: true,
         rating: "4.9",
         reviewCount: 2100
-      },
-      {
-        id: 7,
-        title: "বাংলার ঐতিহ্যবাহী পিঠার রেসিপি",
-        image: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?q=80&w=2070&auto=format&fit=crop",
-        date: "১৩ ফেব্রুয়ারি ২০২৬",
-        time: "১০:০০",
-        author: "বাংলা ফুড ডেস্ক",
-        category: "বাংলাদেশ/ভারত",
-        mealType: "Dessert",
-        excerpt: "পিঠে উৎসবকে সামনে রেখে বাংলার ঐতিহ্যবাহী পিঠার রেসিপি নিয়ে বিশেষ আয়োজন। ভাপা পিঠা, পাটিসাপ্টা সহ বিভিন্ন পিঠা তৈরির সহজ পদ্ধতি।",
-        isRecipe: true,
-        cookingTime: "45 mins",
-        difficulty: "Medium",
-        rating: "4.8",
-        reviewCount: 560
-      },
-      {
-        id: 8,
-        title: "ঢাকার সেরা ৫ রেস্টুরেন্ট",
-        image: "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2070&auto=format&fit=crop",
-        date: "১২ ফেব্রুয়ারি ২০২৬",
-        time: "১৫:৪৫",
-        author: "ফুড রিভিউ টিম",
-        category: "বাংলাদেশ/ভারত",
-        mealType: "Dinner",
-        excerpt: "ঢাকা শহরের সেরা ৫ রেস্টুরেন্টের তালিকা। কোথায় পাবেন সবচেয়ে সুস্বাদু খাবার, কেমন দাম এবং পরিবেশ - জানুন বিস্তারিত।",
-        isRestaurant: true,
-        rating: "4.7",
-        reviewCount: 890
       }
     ];
   };
 
-  // ---------- অটোমেটিক আপডেট ----------
+  // ---------- Auto Update ----------
   useEffect(() => {
-    fetchFoodNews(); // প্রথমবার লোড
+    fetchFoodNews();
     
-    // প্রতি ১০ মিনিট পর পর অটো আপডেট (600000 ms)
     const interval = setInterval(() => {
-      console.log("ফুড নিউজ অটোমেটিক আপডেট হচ্ছে...");
+      console.log("Auto-updating food news...");
       fetchFoodNews();
     }, 600000);
     
     return () => clearInterval(interval);
   }, []);
 
-  // ---------- ক্যাটাগরি ফিল্টার ----------
+  // ---------- Category Filter ----------
   const categories = [
-    { id: "all", name: "সব খাবার", count: news.length },
+    { id: "all", name: "All Food", count: news.length },
     { id: "breakfast", name: "Breakfast", count: news.filter(n => n.mealType === "Breakfast").length },
     { id: "lunch", name: "Lunch", count: news.filter(n => n.mealType === "Lunch").length },
     { id: "dinner", name: "Dinner", count: news.filter(n => n.mealType === "Dinner").length },
     { id: "dessert", name: "Dessert", count: news.filter(n => n.mealType === "Dessert").length },
-    { id: "recipes", name: "রেসিপি", count: news.filter(n => n.isRecipe).length },
-    { id: "restaurants", name: "রেস্টুরেন্ট", count: news.filter(n => n.isRestaurant).length }
+    { id: "recipes", name: "Recipes", count: news.filter(n => n.isRecipe).length },
+    { id: "restaurants", name: "Restaurants", count: news.filter(n => n.isRestaurant).length }
   ];
 
   const filteredPosts = activeCategory === "all" 
@@ -295,20 +247,18 @@ const Food = () => {
     setVisiblePosts(prev => Math.min(prev + 6, filteredPosts.length));
   };
 
-  // Current date/time for display
-  const today = lastUpdated.toLocaleDateString('bn-BD', {
+  const today = lastUpdated.toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
     day: 'numeric'
   });
 
-  const currentTime = lastUpdated.toLocaleTimeString('bn-BD', {
+  const currentTime = lastUpdated.toLocaleTimeString('en-US', {
     hour: '2-digit',
     minute: '2-digit'
   });
 
-  // Recipe of the Day (সর্বোচ্চ রেটিং পাওয়া রেসিপি)
   const recipeOfTheDay = news.filter(n => n.isRecipe).sort((a, b) => parseFloat(b.rating) - parseFloat(a.rating))[0];
 
   return (
@@ -318,27 +268,22 @@ const Food = () => {
         <div className="mb-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-black">ফুড ওয়ার্ল্ড</h1>
-              <p className="text-gray-600 mt-1">বিশ্বের সেরা খাবার, রেসিপি ও রেস্টুরেন্টের খবর</p>
+              <h1 className="text-3xl md:text-4xl font-bold text-black">Food World</h1>
+              <p className="text-gray-600 mt-1">Best recipes, restaurants, and food news</p>
             </div>
             <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
               <div className="text-lg font-semibold text-gray-800">{today}</div>
-              <div className="text-sm text-gray-500">সর্বশেষ আপডেট: {currentTime}</div>
+              <div className="text-sm text-gray-500">Last updated: {currentTime}</div>
             </div>
           </div>
           <div className="h-1 w-32 bg-orange-600"></div>
         </div>
 
-        {/* Auto Update Status */}
-        {/* <div className="bg-green-50 border border-green-200 rounded-lg p-2 mb-4 text-center text-sm text-green-700">
-          ⏰ অটো-আপডেট: প্রতি ১০ মিনিট পর নতুন খাবার সংক্রান্ত খবর আসবে
-        </div> */}
-
         {/* Loading State */}
         {loading && (
           <div className="text-center py-10">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-orange-600 border-t-transparent"></div>
-            <p className="mt-2 text-gray-600">খাবারের খবর আনা হচ্ছে...</p>
+            <p className="mt-2 text-gray-600">Loading food news...</p>
           </div>
         )}
 
@@ -348,7 +293,7 @@ const Food = () => {
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div>
                 <span className="bg-white text-orange-600 px-3 py-1 text-sm font-bold rounded-full mb-3 inline-block">
-                  ⭐ আজকের বিশেষ রেসিপি
+                  ⭐ Recipe of the Day
                 </span>
                 <h2 className="text-2xl md:text-3xl font-bold mb-3">{recipeOfTheDay.title}</h2>
                 <p className="mb-3 max-w-xl text-sm opacity-90">{recipeOfTheDay.excerpt}</p>
@@ -368,7 +313,7 @@ const Food = () => {
                 rel="noopener noreferrer"
                 className="mt-4 md:mt-0 bg-white text-orange-600 hover:bg-gray-100 px-6 py-2 rounded-full font-semibold transition text-sm"
               >
-                রেসিপি দেখুন →
+                View Recipe →
               </a>
             </div>
           </div>
@@ -408,19 +353,19 @@ const Food = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-orange-600">{news.filter(n => n.isRecipe).length}</div>
-              <div className="text-xs text-gray-500">রেসিপি</div>
+              <div className="text-xs text-gray-500">Recipes</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-orange-600">{news.filter(n => n.isRestaurant).length}</div>
-              <div className="text-xs text-gray-500">রেস্টুরেন্ট</div>
+              <div className="text-xs text-gray-500">Restaurants</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
-              <div className="text-xl font-bold text-orange-600">{news.filter(n => n.category === "বাংলাদেশ/ভারত").length}</div>
-              <div className="text-xs text-gray-500">বাংলাদেশি খাবার</div>
+              <div className="text-xl font-bold text-orange-600">{news.filter(n => n.category === "Bangladesh/India").length}</div>
+              <div className="text-xs text-gray-500">Bengali Food</div>
             </div>
             <div className="bg-white rounded-lg p-3 text-center shadow-sm">
               <div className="text-xl font-bold text-orange-600">{news.length}</div>
-              <div className="text-xs text-gray-500">মোট খবর</div>
+              <div className="text-xs text-gray-500">Total</div>
             </div>
           </div>
         )}
@@ -430,7 +375,7 @@ const Food = () => {
           <>
             {filteredPosts.length === 0 ? (
               <div className="text-center py-20 bg-white rounded-2xl shadow">
-                <p className="text-gray-500 text-lg">কোন খাবারের খবর পাওয়া যায়নি</p>
+                <p className="text-gray-500 text-lg">No food news found</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -447,12 +392,12 @@ const Food = () => {
                       />
                       {post.isRecipe && (
                         <span className="absolute top-3 left-3 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                          👨‍🍳 রেসিপি
+                          👨‍🍳 Recipe
                         </span>
                       )}
                       {post.isRestaurant && (
                         <span className="absolute top-3 left-3 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">
-                          🍽️ রেস্টুরেন্ট
+                          🍽️ Restaurant
                         </span>
                       )}
                       <span className="absolute top-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded">
@@ -502,7 +447,7 @@ const Food = () => {
                           rel="noopener noreferrer"
                           className="text-orange-600 hover:text-orange-700 text-sm font-semibold flex items-center gap-1"
                         >
-                          বিস্তারিত
+                          Read More
                           <span className="text-lg">→</span>
                         </a>
                       </div>
@@ -519,7 +464,7 @@ const Food = () => {
                   onClick={handleLoadMore}
                   className="bg-orange-600 text-white hover:bg-orange-700 px-8 py-3 rounded-full font-bold transition shadow-md"
                 >
-                  আরও খাবার দেখুন ({filteredPosts.length - visiblePosts})
+                  Load More ({filteredPosts.length - visiblePosts})
                 </button>
               </div>
             )}
