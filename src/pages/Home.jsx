@@ -537,7 +537,7 @@ const Home = () => {
             </div>
           </div> */}
 
-          {/* POPULAR AUTHORS */}
+          {/* OUR WRITERS - WITHOUT FOLLOW BUTTON */}
           <div className="max-w-7xl mx-auto px-4 mt-12 sm:mt-16 lg:mt-20 mb-12 sm:mb-16 lg:mb-20">
             <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 lg:p-10 border border-gray-100">
               <h2 className="text-2xl sm:text-3xl font-bold text-black text-center mb-6 sm:mb-8 lg:mb-10">
@@ -589,13 +589,9 @@ const Home = () => {
                       {author.role}
                     </p>
                     
-                    <p className="text-gray-400 text-xs mb-3">
+                    <p className="text-gray-400 text-xs">
                       {author.articles} articles
                     </p>
-                    
-                    <button className="text-xs bg-red-600 text-white hover:bg-red-700 px-4 py-1.5 rounded-full transition font-semibold shadow-md w-auto inline-block">
-                      Follow
-                    </button>
                   </div>
                 ))}
               </div>
@@ -645,13 +641,9 @@ const Home = () => {
                       {author.role}
                     </p>
                     
-                    <p className="text-gray-400 text-xs mb-3">
+                    <p className="text-gray-400 text-xs">
                       {author.articles} articles
                     </p>
-                    
-                    <button className="text-xs bg-red-600 text-white hover:bg-red-700 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full transition font-semibold shadow-md w-auto inline-block">
-                      Follow
-                    </button>
                   </div>
                 ))}
               </div>
