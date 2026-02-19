@@ -297,130 +297,127 @@ const Home = () => {
         </div>
       </div>
 
-      {/* POPULAR AUTHORS - FULLY RESPONSIVE WITH MOBILE SLIDER */}
+      {/* POPULAR AUTHORS - FULLY RESPONSIVE */}
       <div className="max-w-7xl mx-auto px-4 mt-12 sm:mt-16 lg:mt-20 mb-12 sm:mb-16 lg:mb-20">
         <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl p-5 sm:p-8 lg:p-10 border border-gray-100">
           <h2 className="text-2xl sm:text-3xl font-bold text-black text-center mb-6 sm:mb-8 lg:mb-10">
             Our Writers
           </h2>
           
-          {/* Mobile: Horizontal Scroll, Tablet: 2 columns, Desktop: 4 columns */}
-          <div className="lg:grid lg:grid-cols-4 lg:gap-10">
-            {/* Mobile Slider (visible only on mobile) */}
-            <div className="flex overflow-x-auto gap-6 pb-4 lg:hidden scrollbar-hide">
-              {[
-                { 
-                  name: "Victoria Anderson", 
-                  role: "Senior Reporter", 
-                  articles: 234, 
-                  image: "https://images.unsplash.com/photo-1494790108777-466d853b23d5?q=80&w=1887&auto=format&fit=crop" 
-                },
-                { 
-                  name: "Michael Chen", 
-                  role: "Feature Editor", 
-                  articles: 189, 
-                  image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" 
-                },
-                { 
-                  name: "Sarah Johnson", 
-                  role: "Sports Journalist", 
-                  articles: 156, 
-                  image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop" 
-                },
-                { 
-                  name: "David Kim", 
-                  role: "Lifestyle Expert", 
-                  articles: 145, 
-                  image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop" 
-                },
-              ].map((author, idx) => (
-                <div key={idx} className="min-w-[200px] text-center group">
-                  <div className="relative mb-3 flex justify-center">
-                    <img
-                      src={author.image}
-                      alt={author.name}
-                      className="w-20 h-20 rounded-full object-cover border-4 border-gray-200 group-hover:border-red-600 transition"
-                    />
-                  </div>
-                  
-                  <h3 className="font-bold text-black text-sm">
-                    {author.name}
-                  </h3>
-                  
-                  <p className="text-red-600 text-xs mb-1">
-                    {author.role}
-                  </p>
-                  
-                  <p className="text-gray-400 text-xs mb-3">
-                    {author.articles} articles
-                  </p>
-                  
-                  <button className="text-xs bg-red-600 text-white hover:bg-red-700 px-4 py-1.5 rounded-full transition font-semibold shadow-md w-auto inline-block">
-                    Follow
-                  </button>
+          {/* Mobile: Horizontal Scroll (visible only on mobile) */}
+          <div className="flex overflow-x-auto gap-6 pb-4 sm:hidden scrollbar-hide">
+            {[
+              { 
+                name: "Victoria Anderson", 
+                role: "Senior Reporter", 
+                articles: 234, 
+                image: "https://images.unsplash.com/photo-1494790108777-466d853b23d5?q=80&w=1887&auto=format&fit=crop" 
+              },
+              { 
+                name: "Michael Chen", 
+                role: "Feature Editor", 
+                articles: 189, 
+                image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" 
+              },
+              { 
+                name: "Sarah Johnson", 
+                role: "Sports Journalist", 
+                articles: 156, 
+                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop" 
+              },
+              { 
+                name: "David Kim", 
+                role: "Lifestyle Expert", 
+                articles: 145, 
+                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop" 
+              },
+            ].map((author, idx) => (
+              <div key={idx} className="min-w-[200px] text-center group">
+                <div className="relative mb-3 flex justify-center">
+                  <img
+                    src={author.image}
+                    alt={author.name}
+                    className="w-20 h-20 rounded-full object-cover border-4 border-gray-200 group-hover:border-red-600 transition"
+                  />
                 </div>
-              ))}
-            </div>
-
-            {/* Desktop Grid (hidden on mobile) */}
-            <div className="hidden lg:grid lg:grid-cols-4 lg:gap-10">
-              {[
-                { 
-                  name: "Victoria Anderson", 
-                  role: "Senior Reporter", 
-                  articles: 234, 
-                  image: "https://images.unsplash.com/photo-1494790108777-466d853b23d5?q=80&w=1887&auto=format&fit=crop" 
-                },
-                { 
-                  name: "Michael Chen", 
-                  role: "Feature Editor", 
-                  articles: 189, 
-                  image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" 
-                },
-                { 
-                  name: "Sarah Johnson", 
-                  role: "Sports Journalist", 
-                  articles: 156, 
-                  image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop" 
-                },
-                { 
-                  name: "David Kim", 
-                  role: "Lifestyle Expert", 
-                  articles: 145, 
-                  image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop" 
-                },
-              ].map((author, idx) => (
-                <div key={idx} className="text-center group">
-                  <div className="relative mb-4 flex justify-center">
-                    <img
-                      src={author.image}
-                      alt={author.name}
-                      className="w-28 h-28 rounded-full object-cover border-4 border-gray-200 group-hover:border-red-600 transition"
-                    />
-                  </div>
-                  
-                  <h3 className="font-bold text-black text-lg">
-                    {author.name}
-                  </h3>
-                  
-                  <p className="text-red-600 text-sm mb-1">
-                    {author.role}
-                  </p>
-                  
-                  <p className="text-gray-400 text-xs mb-3">
-                    {author.articles} articles
-                  </p>
-                  
-                  <button className="text-xs bg-red-600 text-white hover:bg-red-700 px-5 py-2 rounded-full transition font-semibold shadow-md w-auto inline-block">
-                    Follow
-                  </button>
-                </div>
-              ))}
-            </div>
+                
+                <h3 className="font-bold text-black text-sm">
+                  {author.name}
+                </h3>
+                
+                <p className="text-red-600 text-xs mb-1">
+                  {author.role}
+                </p>
+                
+                <p className="text-gray-400 text-xs mb-3">
+                  {author.articles} articles
+                </p>
+                
+                <button className="text-xs bg-red-600 text-white hover:bg-red-700 px-4 py-1.5 rounded-full transition font-semibold shadow-md w-auto inline-block">
+                  Follow
+                </button>
+              </div>
+            ))}
           </div>
-          
+
+          {/* Tablet: 2 columns, Desktop: 4 columns (hidden on mobile) */}
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
+            {[
+              { 
+                name: "Victoria Anderson", 
+                role: "Senior Reporter", 
+                articles: 234, 
+                image: "https://images.unsplash.com/photo-1494790108777-466d853b23d5?q=80&w=1887&auto=format&fit=crop" 
+              },
+              { 
+                name: "Michael Chen", 
+                role: "Feature Editor", 
+                articles: 189, 
+                image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=2070&auto=format&fit=crop" 
+              },
+              { 
+                name: "Sarah Johnson", 
+                role: "Sports Journalist", 
+                articles: 156, 
+                image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2070&auto=format&fit=crop" 
+              },
+              { 
+                name: "David Kim", 
+                role: "Lifestyle Expert", 
+                articles: 145, 
+                image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop" 
+              },
+            ].map((author, idx) => (
+              <div key={idx} className="text-center group">
+                <div className="relative mb-3 sm:mb-4 flex justify-center">
+                  <img
+                    src={author.image}
+                    alt={author.name}
+                    className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 rounded-full object-cover border-4 border-gray-200 group-hover:border-red-600 transition"
+                  />
+                </div>
+                
+                <h3 className="font-bold text-black text-sm sm:text-base lg:text-lg">
+                  {author.name}
+                </h3>
+                
+                <p className="text-red-600 text-xs sm:text-sm mb-1">
+                  {author.role}
+                </p>
+                
+                <p className="text-gray-400 text-xs mb-3">
+                  {author.articles} articles
+                </p>
+                
+                <button className="text-xs bg-red-600 text-white hover:bg-red-700 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full transition font-semibold shadow-md w-auto inline-block">
+                  Follow
+                </button>
+              </div>
+            ))}
+          </div>
+
           {/* Scroll indicator for mobile */}
-          <div className="flex justify-center gap-1 mt-4 lg:hidden">
+          <div className="flex justify-center gap-1 mt-4 sm:hidden">
             <span className="w-2 h-2 bg-red-600 rounded-full"></span>
             <span className="w-2 h-2 bg-gray-300 rounded-full"></span>
             <span className="w-2 h-2 bg-gray-300 rounded-full"></span>
