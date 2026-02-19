@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaGithub, FaDribbble, FaYoutube } from "react-icons/fa";
 import { FiSearch } from "react-icons/fi";
 import { HiOutlineMenuAlt3 } from "react-icons/hi";
@@ -7,9 +7,21 @@ import { IoCloseOutline } from "react-icons/io5";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSearchInput, setShowSearchInput] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery)}`);
+      setSearchQuery("");
+      setShowSearchInput(false);
+    }
   };
 
   return (
@@ -43,23 +55,54 @@ const Navbar = () => {
 
         {/* Right Side - Desktop */}
         <div className="hidden sm:flex items-center gap-6 text-sm">
-          <div className="flex gap-3">
-            <span className="cursor-pointer hover:text-gray-500">EN</span>
-            <span className="cursor-pointer hover:text-gray-500">AR</span>
+          {/* Search */}
+          <div className="relative">
+            {showSearchInput ? (
+              <form onSubmit={handleSearch} className="flex items-center">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search news..."
+                  className="border border-gray-300 rounded-l px-3 py-1 text-sm focus:outline-none focus:border-red-600 w-48"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  className="bg-red-600 text-white px-3 py-1 rounded-r hover:bg-red-700"
+                >
+                  Go
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowSearchInput(false)}
+                  className="ml-2 text-gray-500 hover:text-gray-700"
+                >
+                  <IoCloseOutline className="text-xl" />
+                </button>
+              </form>
+            ) : (
+              <FiSearch
+                className="text-xl cursor-pointer hover:text-gray-500"
+                onClick={() => setShowSearchInput(true)}
+              />
+            )}
           </div>
 
-          <FiSearch className="text-xl cursor-pointer hover:text-gray-500" />
-          <HiOutlineMenuAlt3 
-            className="text-2xl cursor-pointer hover:text-gray-500" 
+          <HiOutlineMenuAlt3
+            className="text-2xl cursor-pointer hover:text-gray-500"
             onClick={toggleMenu}
           />
         </div>
 
         {/* Right Side - Mobile */}
         <div className="flex sm:hidden items-center gap-4">
-          <FiSearch className="text-lg cursor-pointer hover:text-gray-500" />
-          <HiOutlineMenuAlt3 
-            className="text-2xl cursor-pointer hover:text-gray-500" 
+          <FiSearch
+            className="text-lg cursor-pointer hover:text-gray-500"
+            onClick={() => setShowSearchInput(true)}
+          />
+          <HiOutlineMenuAlt3
+            className="text-2xl cursor-pointer hover:text-gray-500"
             onClick={toggleMenu}
           />
         </div>
@@ -77,23 +120,59 @@ const Navbar = () => {
         </div>
       </div>
 
+      {/* Mobile Search Modal */}
+      {showSearchInput && (
+        <div className="sm:hidden fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-20">
+          <div className="bg-white w-11/12 max-w-md rounded-lg p-4">
+            <form onSubmit={handleSearch} className="flex flex-col gap-3">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search news..."
+                className="border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:border-red-600"
+                autoFocus
+              />
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700"
+                >
+                  Search
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowSearchInput(false);
+                    setSearchQuery("");
+                  }}
+                  className="flex-1 bg-gray-200 text-gray-700 px-3 py-2 rounded hover:bg-gray-300"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-50 sm:hidden"
           onClick={toggleMenu}
         />
       )}
 
       {/* Mobile Menu Slider */}
-      <div 
+      <div
         className={`fixed top-0 right-0 h-full w-[300px] bg-white z-50 transform transition-transform duration-300 ease-in-out sm:hidden ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Close Button */}
         <div className="flex justify-end p-4">
-          <IoCloseOutline 
+          <IoCloseOutline
             className="text-3xl cursor-pointer hover:text-gray-500"
             onClick={toggleMenu}
           />
@@ -103,54 +182,48 @@ const Navbar = () => {
         <div className="px-6 py-4">
           {/* Mobile Navigation Links */}
           <div className="flex flex-col gap-4 mb-6">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className="text-lg font-medium hover:text-gray-500 border-b border-gray-100 pb-2"
               onClick={toggleMenu}
             >
               HOME
             </Link>
-            <Link 
-              to="/travel" 
+            <Link
+              to="/travel"
               className="text-lg font-medium hover:text-gray-500 border-b border-gray-100 pb-2"
               onClick={toggleMenu}
             >
               TRAVEL
             </Link>
-            <Link 
-              to="/lifestyle" 
+            <Link
+              to="/lifestyle"
               className="text-lg font-medium hover:text-gray-500 border-b border-gray-100 pb-2"
               onClick={toggleMenu}
             >
               LIFE STYLE
             </Link>
-            <Link 
-              to="/fashion" 
+            <Link
+              to="/fashion"
               className="text-lg font-medium hover:text-gray-500 border-b border-gray-100 pb-2"
               onClick={toggleMenu}
             >
               FASHION
             </Link>
-            <Link 
-              to="/sport" 
+            <Link
+              to="/sport"
               className="text-lg font-medium hover:text-gray-500 border-b border-gray-100 pb-2"
               onClick={toggleMenu}
             >
               SPORT
             </Link>
-            <Link 
-              to="/food" 
+            <Link
+              to="/food"
               className="text-lg font-medium hover:text-gray-500 border-b border-gray-100 pb-2"
               onClick={toggleMenu}
             >
               FOOD
             </Link>
-          </div>
-
-          {/* Mobile Language Selector */}
-          <div className="flex gap-4 mb-6">
-            <span className="cursor-pointer hover:text-gray-500 font-medium">EN</span>
-            <span className="cursor-pointer hover:text-gray-500 font-medium">AR</span>
           </div>
 
           {/* Mobile Contact Info */}
