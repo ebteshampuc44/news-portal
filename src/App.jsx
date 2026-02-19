@@ -6,6 +6,7 @@ import Lifestyle from './pages/Lifestyle';
 import Fashion from './pages/Fashion';
 import Sport from './pages/Sport';
 import Food from './pages/Food';
+import MovieMedia from './pages/MovieMedia';
 import SearchResults from './pages/SearchResults';
 import NewsDetails from './pages/NewsDetails';
 import Error from './pages/Error';
@@ -22,6 +23,7 @@ function App() {
         <Route path="sport" element={<Sport />} />
         <Route path="food" element={<Food />} />
         <Route path="search" element={<SearchResults />} />
+        <Route path="movie-media" element={<MovieMedia />} />
         <Route path="news/:category/:id" element={<NewsDetails />} />
       </Route>
       

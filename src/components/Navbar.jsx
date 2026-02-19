@@ -1,3 +1,4 @@
+// Navbar.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaGithub, FaDribbble, FaYoutube } from "react-icons/fa";
@@ -117,6 +118,7 @@ const Navbar = () => {
           <Link to="/fashion" className="cursor-pointer hover:text-gray-500">FASHION</Link>
           <Link to="/sport" className="cursor-pointer hover:text-gray-500">SPORT</Link>
           <Link to="/food" className="cursor-pointer hover:text-gray-500">FOOD</Link>
+          <Link to="/movie-media" className="cursor-pointer hover:text-gray-500">MOVIE & MEDIA</Link>
         </div>
       </div>
 
@@ -223,6 +225,13 @@ const Navbar = () => {
               onClick={toggleMenu}
             >
               FOOD
+            </Link>
+            <Link
+              to="/movie-media"
+              className="text-lg font-medium hover:text-gray-500 border-b border-gray-100 pb-2"
+              onClick={toggleMenu}
+            >
+              MOVIE & MEDIA
             </Link>
           </div>
 
