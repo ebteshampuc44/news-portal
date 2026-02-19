@@ -12,7 +12,7 @@ const Error = () => {
           <img
             src="https://i.ibb.co.com/JFdH4BdF/Screenshot-2026-02-19-125230-removebg-preview.png"
             alt="404 Error - Page Not Found"
-            className="w-full max-w-md mx-auto rounded-2xl shadow-2xl"
+            className="w-full max-w-md mx-auto rounded-2xl "
           />
         </div>
 
