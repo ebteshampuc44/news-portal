@@ -1,4 +1,3 @@
-// App.jsx (updated)
 import { Routes, Route } from 'react-router-dom';
 import Root from './Root';
 import Home from './pages/Home';
@@ -8,6 +7,7 @@ import Fashion from './pages/Fashion';
 import Sport from './pages/Sport';
 import Food from './pages/Food';
 import SearchResults from './pages/SearchResults';
+import NewsDetails from './pages/NewsDetails'; // <-- ইমপোর্ট করুন
 import Error from './pages/Error';
 
 function App() {
@@ -22,6 +22,7 @@ function App() {
         <Route path="sport" element={<Sport />} />
         <Route path="food" element={<Food />} />
         <Route path="search" element={<SearchResults />} />
+        <Route path="news/:category/:id" element={<NewsDetails />} /> {/* <-- নতুন রুট */}
       </Route>
       
       {/* Error page without Navbar & Footer */}

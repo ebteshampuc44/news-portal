@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Fashion = () => {
   const [news, setNews] = useState([]);
@@ -456,15 +457,13 @@ const Fashion = () => {
                       
                       <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                         <span className="text-xs text-gray-500">{post.author}</span>
-                        <a
-                          href={post.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to={`/news/fashion/${post.id}`}
                           className="text-purple-600 hover:text-purple-700 text-sm font-semibold flex items-center gap-1"
                         >
                           Read More
                           <span className="text-lg">→</span>
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </article>

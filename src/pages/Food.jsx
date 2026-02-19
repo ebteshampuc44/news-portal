@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Food = () => {
   const [news, setNews] = useState([]);
@@ -307,14 +308,12 @@ const Food = () => {
                   <span className="flex items-center gap-1">⭐ {recipeOfTheDay.rating} ({recipeOfTheDay.reviewCount} reviews)</span>
                 </div>
               </div>
-              <a
-                href={recipeOfTheDay.url}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                to={`/news/food/${recipeOfTheDay.id}`}
                 className="mt-4 md:mt-0 bg-white text-orange-600 hover:bg-gray-100 px-6 py-2 rounded-full font-semibold transition text-sm"
               >
                 View Recipe →
-              </a>
+              </Link>
             </div>
           </div>
         )}
@@ -441,15 +440,13 @@ const Food = () => {
                       
                       <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                         <span className="text-xs text-gray-500">{post.author}</span>
-                        <a
-                          href={post.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to={`/news/food/${post.id}`}
                           className="text-orange-600 hover:text-orange-700 text-sm font-semibold flex items-center gap-1"
                         >
                           Read More
                           <span className="text-lg">→</span>
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </article>

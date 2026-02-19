@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Lifestyle = () => {
   const [news, setNews] = useState([]);
@@ -460,15 +461,13 @@ const Lifestyle = () => {
                       
                       <div className="flex items-center justify-between pt-2 border-t border-gray-100">
                         <span className="text-xs text-gray-500">{post.author}</span>
-                        <a
-                          href={post.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to={`/news/lifestyle/${post.id}`}
                           className="text-green-600 hover:text-green-700 text-sm font-semibold flex items-center gap-1"
                         >
                           Read More
                           <span className="text-lg">→</span>
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </article>
@@ -501,9 +500,6 @@ const Lifestyle = () => {
               Meditate for 10 minutes every day. It will reduce your stress and increase focus.
               Drink plenty of water and sleep 7-8 hours daily.
             </p>
-            <div className="flex justify-end">
-              <span className="text-xs opacity-75">- Lifestyle Expert Team</span>
-            </div>
           </div>
         )}
       </div>
